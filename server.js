@@ -4,7 +4,7 @@ const app = express();
 
 const articles = require("./data.json");
 
-const PORT = 3000;
+const PORT = process.env.PORT || 3000;
 
 // HOME PAGE (this is where your /home goes)
 app.get("/home", (req, res) => {
