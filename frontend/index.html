@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Be Mindful</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+
+<body>
+
+  <header>
+  <a href="index.html" class="logo">
+    <h1>🧠 Be Mindful</h1>
+  </a>
+  <p>Simple psychology insights for everyday life</p>
+</header>
+
+  <main>
+
+  <input type="text" id="search" placeholder="Search articles..." />
+
+  <div id="filters">
+    <button data-filter="all">All</button>
+    <button data-filter="anxiety">Anxiety</button>
+    <button data-filter="depression">Depression</button>
+    <button data-filter="overthinking">Overthinking</button>
+  </div>
+
+  <!-- FEATURED -->
+  <section id="featured"></section>
+
+  <h2>More Articles</h2>
+  <div id="articles"></div>
+
+</main>
+
+  <!-- JS must be at the bottom so HTML loads first -->
+  <script src="app.js"></script>
+
+</body>
+</html>

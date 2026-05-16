@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Be Mindful - Article</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+
+<body>
+
+  <!-- HEADER / LOGO -->
+  <header>
+    <a href="index.html" class="logo">
+      <h1>🧠 Be Mindful</h1>
+    </a>
+  </header>
+
+  <!-- READING PROGRESS BAR -->
+  <div id="progress-bar"></div>
+
+  <!-- ARTICLE CONTENT -->
+  <main id="article">
+
+    <a href="index.html">← Back to Home</a>
+
+    <h1 id="title"></h1>
+    <p id="content"></p>
+
+  </main>
+
+  <!-- LOAD ARTICLE DATA -->
+  <script>
+    const params = new URLSearchParams(window.location.search);
+    const slug = params.get("slug");
+
+    fetch(`http://localhost:3000/articles/${slug}`)
+      .then(res => res.json())
+      .then(data => {
+        document.getElementById("title").textContent = data.title;
+        document.getElementById("content").textContent = data.content;
+      });
+  </script>
+
+  <!-- PROGRESS BAR SCRIPT -->
+  <script>
+    window.addEventListener("scroll", () => {
+      const doc = document.documentElement;
+
+      const scrollTop = doc.scrollTop;
+      const scrollHeight = doc.scrollHeight - doc.clientHeight;
+
+      const progress = (scrollTop / scrollHeight) * 100;
+
+      document.getElementById("progress-bar").style.width = progress + "%";
+    });
+  </script>
+
+</body>
+</html>
