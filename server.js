@@ -13,13 +13,17 @@ app.use(express.static(path.join(__dirname, "frontend")));
 
 // -------------------- HELPERS --------------------
 function getArticles() {
-  return JSON.parse(fs.readFileSync("./data.json", "utf-8"));
+  return JSON.parse(
+    fs.readFileSync(path.join(__dirname, "data.json"), "utf-8")
+  );
 }
 
 function saveArticles(data) {
-  fs.writeFileSync("./data.json", JSON.stringify(data, null, 2));
+  fs.writeFileSync(
+    path.join(__dirname, "data.json"),
+    JSON.stringify(data, null, 2)
+  );
 }
-
 // -------------------- ARTICLES (PUBLIC) --------------------
 
 // all articles
@@ -84,6 +88,11 @@ app.delete("/admin/delete/:id", (req, res) => {
 // -------------------- HOME --------------------
 app.get("/", (req, res) => {
   res.sendFile(path.join(__dirname, "frontend", "index.html"));
+});
+
+// -------------------- HEALTH CHECK --------------------
+app.get("/health", (req, res) => {
+  res.send("OK");
 });
 
 // -------------------- START --------------------
