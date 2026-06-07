@@ -3,57 +3,54 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Be Mindful - Article</title>
+
+  <title>Be Mindful</title>
+
+  <!-- FAVICON (THIS IS THE FIX) -->
+  <link rel="icon" type="image/png" href="/favicon.png?v=2">
+
+  <link href="https://fonts.googleapis.com/css2?family=Patrick+Hand&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css" />
 </head>
-
 <body>
 
-  <!-- HEADER / LOGO -->
   <header>
-    <a href="index.html" class="logo">
-      <h1>🧠 Be Mindful</h1>
-    </a>
+    <h1>Be Mindful</h1>
+    <p>Simple psychology insights for everyday life</p>
   </header>
 
-  <!-- READING PROGRESS BAR -->
-  <div id="progress-bar"></div>
-
-  <!-- ARTICLE CONTENT -->
-  <main id="article">
-
-    <a href="index.html">← Back to Home</a>
-
-    <h1 id="title"></h1>
-    <p id="content"></p>
-
+  <main>
+    <div id="article"></div>
   </main>
 
-  <!-- LOAD ARTICLE DATA -->
   <script>
     const params = new URLSearchParams(window.location.search);
     const slug = params.get("slug");
 
-    fetch(`http://localhost:3000/articles/${slug}`)
+    let currentArticle = null;
+
+    fetch(`/articles/${slug}`)
       .then(res => res.json())
-      .then(data => {
-        document.getElementById("title").textContent = data.title;
-        document.getElementById("content").textContent = data.content;
+      .then(article => {
+        currentArticle = article;
+        renderArticle(article);
       });
-  </script>
 
-  <!-- PROGRESS BAR SCRIPT -->
-  <script>
-    window.addEventListener("scroll", () => {
-      const doc = document.documentElement;
+    function renderArticle(article) {
+      document.title = article.title + " | Be Mindful";
 
-      const scrollTop = doc.scrollTop;
-      const scrollHeight = doc.scrollHeight - doc.clientHeight;
+      document.getElementById("article").innerHTML = `
+        <a href="index.html">← Back</a>
 
-      const progress = (scrollTop / scrollHeight) * 100;
+        <h1>${article.title}</h1>
 
-      document.getElementById("progress-bar").style.width = progress + "%";
-    });
+        <img src="${article.image}" style="width:100%; border-radius:10px; margin:15px 0;" />
+
+        <div class="article-content">
+          ${article.content}
+        </div>
+      `;
+    }
   </script>
 
 </body>
