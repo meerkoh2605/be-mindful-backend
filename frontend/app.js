@@ -1,123 +1,112 @@
-const API_URL = "/articles";
-
-/* ELEMENTS */
 const articlesContainer = document.getElementById("articles");
 const featuredContainer = document.getElementById("featured");
 const searchInput = document.getElementById("search");
 
-/* STORE ARTICLES */
 let allArticles = [];
 
-/* FETCH ARTICLES */
-fetch(API_URL)
-  .then(res => res.json())
-  .then(data => {
+function init() {
+  const tryLoad = () => {
+    if (!window.articles) {
+      setTimeout(tryLoad, 50);
+      return;
+    }
 
-    allArticles = data;
+    allArticles = window.articles;
 
-    renderFeatured(data);
-    renderArticles(data);
+    renderFeatured(allArticles);
+    renderArticles(allArticles);
+    setupSearch();
+    loadArticlePage();
+  };
 
-  })
-  .catch(err => console.error("Error loading articles:", err));
+  tryLoad();
+}
 
-/* RENDER ARTICLES */
+window.addEventListener("DOMContentLoaded", init);
+
+/* ---------------- ARTICLES LIST ---------------- */
+
 function renderArticles(data) {
-
   if (!articlesContainer) return;
 
   articlesContainer.innerHTML = "";
 
-  if (data.length === 0) {
-    articlesContainer.innerHTML = `<p>No articles found.</p>`;
+  if (!data.length) {
+    articlesContainer.innerHTML = "<p>No articles found.</p>";
     return;
   }
 
   data.forEach(article => {
-
     articlesContainer.innerHTML += `
       <div class="article-card">
-
         <img class="article-thumb" src="${article.image}" alt="${article.title}">
-
         <h3>${article.title}</h3>
-
         <p>${article.summary}</p>
-
-        <a href="article.html?slug=${article.slug}">
-          Read Article →
-        </a>
-
+        <a href="article.html?slug=${article.slug}">Read Article →</a>
       </div>
     `;
   });
 }
 
-/* FEATURED ARTICLE */
-function renderFeatured(data) {
+/* ---------------- FEATURED ---------------- */
 
-  if (!featuredContainer || data.length === 0) return;
+function renderFeatured(data) {
+  if (!featuredContainer || !data.length) return;
 
   const latest = data[data.length - 1];
 
   featuredContainer.innerHTML = `
     <div class="featured-card">
-
       <h3>${latest.title}</h3>
-
       <p>${latest.summary}</p>
-
-      <a href="article.html?slug=${latest.slug}">
-        Read Article →
-      </a>
-
+      <a href="article.html?slug=${latest.slug}">Read Article →</a>
     </div>
   `;
 }
 
-/* SEARCH */
-if (searchInput) {
+/* ---------------- SEARCH ---------------- */
 
-  searchInput.addEventListener("input", (e) => {
+function setupSearch() {
+  if (!searchInput) return;
 
+  searchInput.addEventListener("input", e => {
     const query = e.target.value.toLowerCase();
 
-    const filtered = allArticles.filter(article => {
-
-      return (
-        article.title.toLowerCase().includes(query) ||
-        article.summary.toLowerCase().includes(query)
-      );
-
-    });
+    const filtered = allArticles.filter(a =>
+      a.title.toLowerCase().includes(query) ||
+      a.summary.toLowerCase().includes(query)
+    );
 
     renderArticles(filtered);
-
   });
-
 }
 
-const articleTitle = document.getElementById("article-title");
-const articleImage = document.getElementById("article-image");
-const articleContent = document.getElementById("article-content");
+/* ---------------- ARTICLE PAGE ---------------- */
 
-const urlParams = new URLSearchParams(window.location.search);
-const slug = urlParams.get("slug");
+function loadArticlePage() {
+  const articleBox = document.getElementById("article");
+  if (!articleBox) return;
 
-if (slug && articleTitle) {
+  const slug = new URLSearchParams(window.location.search).get("slug");
 
-  fetch(`/articles/${slug}`)
-    .then(res => res.json())
-    .then(article => {
+  const article = window.articles?.find(a => a.slug === slug);
 
-      articleTitle.textContent = article.title;
+  if (!article) {
+    articleBox.innerHTML = "<p>Article not found.</p>";
+    return;
+  }
 
-      articleImage.src = article.image;
-      articleImage.alt = article.title;
+  document.title = `${article.title} | Be Mindful`;
 
-      articleContent.innerHTML = article.content;
+  articleBox.innerHTML = `
+    <a href="index.html">← Back</a>
 
-    })
-    .catch(err => console.error("Error loading article:", err));
+    <h1>${article.title}</h1>
 
+    <img src="${article.image}" style="width:100%; border-radius:10px; margin:15px 0;" />
+
+    <div class="article-content">
+      ${article.content}
+    </div>
+  `;
 }

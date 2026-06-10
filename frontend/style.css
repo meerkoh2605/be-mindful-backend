@@ -439,3 +439,24 @@ button:hover {
   color: white;
   transform: translateY(-2px);
 }
+
+.admin-container {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 30px;
+  padding: 20px;
+}
+
+.admin-form input,
+.admin-form textarea {
+  width: 100%;
+  margin: 8px 0;
+  padding: 10px;
+}
+
+.admin-card {
+  background: #1a1a1f;
+  padding: 10px;
+  margin: 10px 0;
+  border-radius: 8px;
+}
